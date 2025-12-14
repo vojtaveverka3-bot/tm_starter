@@ -1,2 +1,9 @@
+import assert from 'node:assert/strict';
 
-console.log('Sample test – sem si doplníte testy pro vaše endpointy.');
+describe('placeholder', () => {
+  it('true is true', () => {
+    assert.equal(true, true);
+  });
+});
+
+// EOF

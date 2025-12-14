@@ -2,9 +2,21 @@
 // (což je v podstatě nějaký další handler, v tomto případě to odchytí tento error handler)
 //export = zpřístupníš proměnnou/funkci z jednoho souboru pro použití v jiném.
 //jinde pak import { errorHandler } from './middlewares/errorHandler.js';
-export function errorHandler(err, req, res, next) {
-    if (err.name === 'ZodError' || err?.issues) { //zde se odchytí veškeré ZodErrory
-        return res.status(400).json({ error: 'Validation failed', details: err.issues || [] }); //ZoD errory souvisí s validací, tzn. uživatel zadal něco špatně, proto kod 400 - chyba na klientu
+export function errorHandler(err, req, res, _next) {
+    // Pokud je naše vlastní ValidationError, pošli strukturovanou odpověď včetně code
+    if (err && err.name === 'ValidationError') {
+        return res.status(err.statusCode || 400).json({ code: err.code || 'VALIDATION_ERROR', message: err.message, details: err.details || [] });
     }
-    res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
+
+    // ZodError fallback (pokud někde vyhozený přímo)
+    if (err && (err.name === 'ZodError' || err?.issues)) {
+        return res.status(400).json({ code: 'ZOD_VALIDATION_ERROR', message: 'Validation failed', details: err.issues || [] });
+    }
+
+    // Obecná chyba
+    const status = err?.statusCode || err?.status || 500;
+    const payload = { code: err?.code || 'INTERNAL_ERROR', message: err?.message || 'Internal Server Error' };
+    // Pokud existují dodatečné detaily (např. z ValidationError), přidej je
+    if (err?.details) payload.details = err.details;
+    res.status(status).json(payload);
 }

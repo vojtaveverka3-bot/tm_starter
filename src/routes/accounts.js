@@ -1,12 +1,14 @@
 
 import { Router } from 'express';
 import * as AccountsController from '../controllers/accountsController.js'; //
+import { allowRoles } from "../middlewares/roles.js";
+
 
 //export = zpřístupníš proměnnou/funkci z jednoho souboru pro použití v jiném.
 export const router = Router();
 
 // GET /v1/accounts/getAccountById?accountId=...
-router.get('/getAccountById', AccountsController.getAccountById);
+router.get('/getAccountById', AccountsController.getAccountById, allowRoles("admin", "boss"));
 
 // GET /v1/accounts/listAccounts?userId=...&page=1&pageSize=50
 router.get('/listAccounts', AccountsController.listAccounts);
