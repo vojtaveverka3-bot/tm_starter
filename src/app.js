@@ -16,6 +16,7 @@ import helmet from 'helmet'; //nastaví sadu bezpečnostních HTTP hlaviček (na
 import dotenv from 'dotenv'; //načte proměnné z .env souboru do process.env (např. PORT, „tajemství“ pro tokeny). Díky tomu nejsou hodnoty natvrdo v kódu.
 
 import { router as accountsRouter } from './routes/accounts.js'; //vytvořené routy musíme naimportovat
+import { router as usersRouter } from './routes/users.js'
 import { router as healthRouter } from './routes/health.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
@@ -40,6 +41,7 @@ app.use(authMiddleware);*/
 app.use('/v1/accounts', accountsRouter); //všechny routy, co vytvoříme v routes, musíme zde "zaregistrovat" a výše je musíme naimportovat
 //jelikož je /v1/accounts společné pro všechny endpointy (routy) v rámci accountsRouter, tak je lepší tuto společnou část použít, zde než aby se musela explicitně zmiňovat u každé routy
 app.use('/v1/health', healthRouter); //routa pro rychlé ověření, že server běží a naslouchá
+app.use('/v1/users', usersRouter); //routa pro praci s uzivateli
 
 //toto je centrální error handler, všimněte si, že pokud někde nastane chyba, tak se nepošle uživateli rovnou přes res, ale volá se next,
 // proč next? jelikož jsme ho "zaregistrovali pomocí use" až za /v1/accounts a za /v1/health a je tedy až další v řadě pro zpracování
