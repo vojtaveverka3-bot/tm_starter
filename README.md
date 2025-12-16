@@ -1,5 +1,5 @@
 
-# TransactionManager – startovací balíček (Express)
+# TransactionManager – startovací balíček (Express) 02
 
 Tento projekt je připraven pro tým, který bude vytvářet jednotlivé cesty (endpointy) pro TransactionManager.
 
